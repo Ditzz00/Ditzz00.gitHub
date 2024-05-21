@@ -1,3 +1,7 @@
+<?php
+include 'config.php';
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -69,36 +73,36 @@
     </div>
     </section>
 
+
     <section class="services" id="services">
         <h2 class="heading">Blog</h2>
         
         <div class="services-container">
 
-            <?php
-            include 'koneksi.php';
+         <?php
+    $query = "SELECT * FROM blog";
+    $result = mysqli_query($conn, $query);
+
+    $no = 1;
+
+    if ($result) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            if ($no >=0) {
+            ?>
+            <div class="services-box">
+                <div class="services-info">
+                    <h4><?= $row["judul"] ?></h4>
+                    <p><?= $row["deskripsi"] ?></p>
+                </div>
+            </div>
+  <?php } 
+            $no++;
+        }
+    } else {
+        echo "Error: " . $query . "<br>" . mysqli_error($conn);
+    } ?>
             
-            $query = "SELECT * FROM blog";
-            $result = mysqli_query($conn, $query);
 
-            $no = 1;
-
-            if ($result) {
-                while ($row = mysqli_fetch_assoc($result)) {
-                    if ($no >= 0) {
-                        ?>
-                        <div class="services-box">
-                            <div class="services-info">
-                                <h4><?= $row["judul"] ?></h4>
-                                <p><?= $row["deskripsi"] ?></p>
-                            </div>
-                        </div>
-            <?php   }
-                    $no++;
-                }
-            } else {
-                echo "Error: " . $query . "<br>" . mysqli_error($conn);
-            } ?>
-                
         </div>
 
     </section>
