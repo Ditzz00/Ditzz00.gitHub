@@ -1,6 +1,8 @@
 <?php
 include 'config.php';
 
+$message = "";
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,6 +14,7 @@ include 'config.php';
 </head>
 <body>
 
+
     <header class="header">
         <a href="#home" class="logo">Yogi
         <span>Aditya</span></a>
@@ -21,7 +24,7 @@ include 'config.php';
         <nav class="navbar">
         <a href="#home" class="active">Home</a>
         <a href="#about">About</a>
-        <a href="#services">Services</a>
+        <a href="#services">Blog</a>
         <a href="#contact">Contact</a>
         </nav>
     </header>
@@ -107,27 +110,48 @@ include 'config.php';
 
     </section>
 
-    <section class="contact" id="contact">
+<section class="contact" id="contact">
+    <h2 class="heading">Contact <span>Me</span></h2>
 
-        <h2 class="heading">Contact <span>Me</span></h2>
+    <form action="index.php" method="POST">
+        <div class="input-box">
+            <input type="text" name="name" placeholder="Full Name" required>
+            <input type="email" name="email" placeholder="Email" required>
+        </div>
+        <div class="input-box">
+            <input type="tel" name="phone" placeholder="Phone Number" required>
+            <input type="text" name="subject" placeholder="Subject" required>
+        </div>
+        <textarea name="message" cols="30" rows="10" placeholder="Your Message" required></textarea>
+        <input type="submit" value="Send Message" class="btn">
+    </form>
 
-        <form action="#">
+    <?php
 
-            <div class="input-box">
-                <input type="Name" placeholder="Full Name">
-                <input type="Email" placeholder="Email">
-            </div>
-            <div class="input-box">
-                <input type="Number" placeholder="Phone Number">
-                <input type="text" placeholder="Subject">
-            </div>
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $name = htmlspecialchars($_POST['name']);
+    $email = htmlspecialchars($_POST['email']);
+    $phone = htmlspecialchars($_POST['phone']);
+    $subject = htmlspecialchars($_POST['subject']);
+    $message = htmlspecialchars($_POST['message']);
 
-            <textarea name="" id="" cols="30" rows="10" 
-            placeholder="Your Mess"></textarea>
-            
-            <input type="Submit" value="Send Message" class="btn">
-        </form>
-    </section>
+    $sql = "INSERT INTO contacts (name, email, phone, subject, message) VALUES (?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("sssss", $name, $email, $phone, $subject, $message);
+
+
+    if ($stmt->execute()) {
+        $message = "Pesan berhasil disimpan!";
+    } else {
+        $message = "Error: " . $sql . "<br>" . $conn->error;
+    }
+
+    $stmt->close();
+    $conn->close();
+}
+?>
+
+</section>
 
     <footer class="footer">
 
